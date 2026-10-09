@@ -19702,3 +19702,60 @@ table {
     font-size: 10px !important;
   }
 }
+
+/* =========================================================
+   TANAHITA MOBILE HOTFIX — EKSPLORASI CTA
+   Fix: heading "Sudah siap? / Pilih topikmu dan mulai belajar."
+   Jangan override desktop; hanya <=560px.
+   ========================================================= */
+@media (max-width: 560px) {
+  .cta-section {
+    padding: 88px 20px !important;
+    min-height: auto !important;
+    overflow: hidden !important;
+  }
+
+  .cta-section .eyebrow {
+    display: block !important;
+    margin: 0 0 18px !important;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    letter-spacing: .18em !important;
+    text-align: center !important;
+  }
+
+  .cta-section h2 {
+    width: 100% !important;
+    max-width: 340px !important;
+    margin: 0 auto 24px !important;
+    padding: 0 !important;
+    font-size: clamp(2.25rem, 11vw, 3.25rem) !important;
+    line-height: .98 !important;
+    letter-spacing: -.035em !important;
+    word-spacing: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    text-align: center !important;
+  }
+
+  .cta-section > p:not(.eyebrow) {
+    width: 100% !important;
+    max-width: 320px !important;
+    margin: 0 auto 28px !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+    text-align: center !important;
+  }
+
+  .cta-section .button,
+  .cta-section .button-light,
+  .cta-section .button-dark {
+    max-width: 260px !important;
+    width: auto !important;
+    margin: 0 auto !important;
+    padding: 13px 22px !important;
+    font-size: 14px !important;
+    line-height: 1.25 !important;
+  }
+}
