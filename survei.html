@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TANAHITA — Survei</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root {
+  --survey-cream:#f4f1e8;
+  --survey-paper:#fbf9f2;
+  --survey-ink:#183b2c;
+  --survey-muted:#687068;
+  --survey-line:#e4dfd1;
+  --survey-accent:#d9794c;
+  --survey-shadow:0 18px 45px rgba(24,59,44,.08);
+}
+body.survey-page { background:var(--survey-cream); color:var(--survey-ink); }
+.survey-page main { overflow:hidden; }
+.survey-hero {
+  padding:90px clamp(24px,7vw,110px) 72px;
+  position:relative;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(217,121,76,.18), transparent 20%),
+    radial-gradient(circle at 12% 75%, rgba(107,143,113,.15), transparent 24%),
+    var(--survey-cream);
+}
+.hero-orbit {
+  position:absolute; width:240px; height:240px; border:1px dashed rgba(24,59,44,.18);
+  border-radius:50%; right:8vw; top:48px; transform:rotate(12deg);
+}
+.hero-orbit::after {
+  content:""; position:absolute; width:16px; height:16px; border-radius:50%;
+  background:#d9794c; left:23px; top:37px; box-shadow:80px 155px 0 #e7b84b, 150px 55px 0 #6b8f71;
+}
+.hero-kicker { font-weight:800; letter-spacing:.22em; font-size:.76rem; margin:0 0 16px; }
+.survey-hero h1 { max-width:820px; font-size:clamp(3.2rem,7vw,6.6rem); line-height:.91; margin:0 0 26px; letter-spacing:-.05em; }
+.hero-copy { max-width:700px; font-size:1.06rem; line-height:1.8; color:#536058; }
+.hero-meta { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
+.meta-pill { padding:10px 15px; border:1px solid var(--survey-line); background:rgba(255,255,255,.52); border-radius:999px; font-weight:700; font-size:.82rem; }
+.section-wrap { padding:76px clamp(24px,7vw,110px); }
+.section-intro { max-width:740px; margin-bottom:38px; }
+.section-intro .eyebrow { margin-bottom:10px; }
+.section-intro h2 { font-size:clamp(2.2rem,4vw,4rem); line-height:.98; letter-spacing:-.04em; margin:0 0 16px; }
+.section-intro p { color:var(--survey-muted); line-height:1.75; }
+.summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.summary-card {
+  position:relative; padding:28px; min-height:330px; border-radius:30px; background:var(--survey-paper);
+  box-shadow:var(--survey-shadow); border:1px solid rgba(24,59,44,.06); overflow:hidden;
+  transition:.25s ease; animation:surveyIn .65s both;
+}
+.summary-card:hover { transform:translateY(-5px) rotate(-.3deg); }
+.summary-card::after { content:""; position:absolute; width:90px;height:90px;border-radius:50%;right:-30px;top:-30px;background:rgba(231,184,75,.18); }
+.summary-card:nth-child(2)::after { background:rgba(217,121,76,.16); }
+.summary-card:nth-child(3)::after { background:rgba(107,143,113,.16); }
+.summary-chart { display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+.summary-chart .donut-svg { width:185px; height:185px; }
+.summary-title { font-size:1.2rem; margin:4px 0 6px; }
+.summary-card p { color:var(--survey-muted); line-height:1.6; margin:0; }
+.summary-tag { display:inline-flex; margin-top:16px; padding:7px 11px; border-radius:999px; background:#e9efe6; font-size:.74rem; font-weight:800; letter-spacing:.08em; }
+.filter-bar {
+  display:flex; flex-wrap:wrap; gap:10px; margin:0 0 28px;
+  position:sticky; top:12px; z-index:5;
+}
+.filter-btn {
+  border:1px solid var(--survey-line); background:rgba(251,249,242,.92); color:var(--survey-ink);
+  border-radius:999px; padding:11px 17px; font:inherit; font-weight:800; cursor:pointer; transition:.2s;
+  backdrop-filter:blur(10px);
+}
+.filter-btn:hover,.filter-btn.active { background:var(--survey-ink); color:white; transform:translateY(-2px); }
+.question-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; }
+.question-card {
+  background:var(--survey-paper); border:1px solid rgba(24,59,44,.07); border-radius:28px; padding:24px;
+  box-shadow:0 10px 30px rgba(24,59,44,.055); animation:surveyIn .55s both; position:relative;
+}
+.question-card.hidden { display:none; }
+.question-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:13px; }
+.question-number { width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#e8eee5;font-weight:900;font-size:.78rem; }
+.question-topic { text-transform:uppercase; letter-spacing:.13em; font-size:.68rem; font-weight:900; color:#7a817a; }
+.question-card h3 { font-size:1.15rem; line-height:1.35; margin:0 0 18px; max-width:560px; }
+.question-body { display:grid; grid-template-columns:180px 1fr; gap:14px; align-items:center; }
+.donut-wrap { display:flex; justify-content:center; }
+.donut-svg { width:172px;height:172px; overflow:visible; }
+.donut-svg circle:not(:first-child) { transition:stroke-width .2s, opacity .2s; }
+.donut-svg:hover circle { stroke-width:22; }
+.donut-emoji { font-size:26px; }
+.donut-center { font:900 14px Arial,sans-serif; fill:var(--survey-ink); }
+.legend-panel { min-width:0; }
+.winner { padding:12px 14px; border-radius:17px; background:#f0eee4; margin-bottom:11px; }
+.winner span { display:block; font-size:.67rem; text-transform:uppercase; letter-spacing:.09em; color:#7b8179; margin-bottom:4px; }
+.winner strong { font-size:.88rem; line-height:1.25; display:block; }
+.legend-list { list-style:none; padding:0; margin:0; display:grid; gap:7px; max-height:180px; overflow:auto; }
+.legend-list li { display:grid; grid-template-columns:10px minmax(0,1fr) auto; column-gap:7px; align-items:center; font-size:.76rem; }
+.legend-dot { width:8px;height:8px;border-radius:50%;background:var(--dot); }
+.legend-label { color:#505a53; line-height:1.25; }
+.legend-list strong { font-size:.76rem; }
+.legend-list small { grid-column:2 / 4; color:#8a9089; font-size:.63rem; margin-top:-3px; }
+.card-foot { border-top:1px dashed var(--survey-line); margin-top:19px; padding-top:13px; display:flex; justify-content:space-between; color:#8a9089; font-size:.66rem; text-transform:uppercase; letter-spacing:.08em; }
+.insight-box {
+  margin-top:28px; padding:26px 28px; border-radius:26px; background:#1f4d3a; color:white;
+  display:flex; gap:20px; align-items:flex-start; box-shadow:var(--survey-shadow);
+}
+.insight-icon { width:44px;height:44px;border-radius:50%;background:#e7b84b;color:#183b2c;display:grid;place-items:center;font-size:1.25rem;flex:0 0 auto; }
+.insight-box h3 { margin:0 0 6px; font-size:1.2rem; }
+.insight-box p { margin:0; line-height:1.65; color:#dfe9df; }
+.cta-survey {
+  padding:90px clamp(24px,7vw,110px); background:#1f4d3a; color:white; text-align:center;
+}
+.cta-survey h2 { font-size:clamp(2.5rem,5vw,5rem); line-height:.95; letter-spacing:-.04em; margin:8px 0 22px; }
+.cta-survey p { max-width:620px; margin:0 auto 26px; color:#d9e5da; line-height:1.7; }
+.cta-link { display:inline-flex; padding:14px 20px; background:#f4f1e8; color:#183b2c; border-radius:999px; font-weight:900; text-decoration:none; }
+@keyframes surveyIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+@media (max-width:1000px) {
+  .summary-grid { grid-template-columns:1fr; }
+  .summary-card { min-height:auto; display:grid; grid-template-columns:180px 1fr; align-items:center; gap:18px; }
+  .summary-chart { grid-row:span 3; }
+  .summary-tag { width:max-content; }
+  .question-grid { grid-template-columns:1fr; }
+}
+@media (max-width:650px) {
+  .survey-hero { padding-top:55px; }
+  .hero-orbit { opacity:.45; transform:scale(.7); right:-35px; }
+  .summary-card { display:block; }
+  .summary-chart { margin-bottom:10px; }
+  .question-body { grid-template-columns:1fr; }
+  .legend-list { max-height:none; }
+  .filter-bar { top:5px; }
+  .filter-btn { flex:1 1 calc(50% - 10px); }
+}
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+}
+</style>
+</head>
+
+<body class="survey-page">
+
+<header class="navbar">
+  <a href="index.html" class="logo">TANAHITA</a>
+  <nav>
+    <a href="index.html">Beranda</a>
+    <a href="eksplorasi.html">Eksplorasi</a>
+    <a href="survei.html" aria-current="page">Survei</a>
+    <a href="tentang.html">Tentang</a>
+  </nav>
+</header>
+
+<main>
+  <section class="survey-hero">
+    <div class="hero-orbit" aria-hidden="true"></div>
+    <p class="hero-kicker">04 · HASIL KUESIONER</p>
+    <h1>Apa yang orang<br>sebenarnya sudah tahu?</h1>
+    <p class="hero-copy">
+      Sebelum TANAHITA dikembangkan, dilakukan survei untuk mengetahui pemahaman responden
+      mengenai tanah, erosi, dan hasil pertanian. Sekarang, hasilnya kami susun ulang
+      supaya lebih mudah dibaca—bukan sekadar angka, tapi cerita kecil dari 26 responden.
+    </p>
+    <div class="hero-meta">
+      <span class="meta-pill">👥 26 responden</span>
+      <span class="meta-pill">🌱 Tanah</span>
+      <span class="meta-pill">💦 Erosi</span>
+      <span class="meta-pill">🍅 Pascapanen</span>
+    </div>
+  </section>
+
+  <section class="section-wrap">
+    <div class="section-intro">
+      <p class="eyebrow">RINGKASAN HASIL</p>
+      <h2>Tiga angka yang<br>langsung terasa.</h2>
+      <p>
+        Ketiga topik ternyata cukup dekat dengan kehidupan sehari-hari. Diagram bulat
+        di bawah membantu melihat proporsi jawaban utama dengan cepat.
+      </p>
+    </div>
+
+    <div class="summary-grid">
+      
+      <article class="summary-card">
+        <div class="summary-chart">
+          <svg class="donut-svg" viewBox="0 0 185 185" role="img" aria-label="Diagram lingkaran 76,92%">
+        <circle cx="92.5" cy="92.5" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="92.5" cy="92.5" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="297.15 92.41" stroke-dashoffset="-0.00" transform="rotate(-90 92.5 92.5)"><title>nilai utama: 76,92% (20)</title></circle>
+        <circle cx="92.5" cy="92.5" r="42" fill="#f7f4ea"/>
+        <text x="92.5" y="89.5" text-anchor="middle" class="donut-emoji">🌱</text>
+        <text x="92.5" y="115.5" text-anchor="middle" class="donut-center">76,92%</text>
+    </svg>
+        </div>
+        <div>
+          <h3 class="summary-title">Tanah</h3>
+          <p><strong>76,92%</strong> menganggap jenis tanah sangat berpengaruh terhadap pertumbuhan tanaman.</p>
+          <span class="summary-tag">TEMUAN UTAMA</span>
+        </div>
+      </article>
+      
+      <article class="summary-card">
+        <div class="summary-chart">
+          <svg class="donut-svg" viewBox="0 0 185 185" role="img" aria-label="Diagram lingkaran 88,46%">
+        <circle cx="92.5" cy="92.5" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="92.5" cy="92.5" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="342.10 47.45" stroke-dashoffset="-0.00" transform="rotate(-90 92.5 92.5)"><title>nilai utama: 88,46% (23)</title></circle>
+        <circle cx="92.5" cy="92.5" r="42" fill="#f7f4ea"/>
+        <text x="92.5" y="89.5" text-anchor="middle" class="donut-emoji">💦</text>
+        <text x="92.5" y="115.5" text-anchor="middle" class="donut-center">88,46%</text>
+    </svg>
+        </div>
+        <div>
+          <h3 class="summary-title">Erosi</h3>
+          <p><strong>88,46%</strong> pernah melihat tanah terkikis setelah hujan atau terkena aliran air.</p>
+          <span class="summary-tag">TEMUAN UTAMA</span>
+        </div>
+      </article>
+      
+      <article class="summary-card">
+        <div class="summary-chart">
+          <svg class="donut-svg" viewBox="0 0 185 185" role="img" aria-label="Diagram lingkaran 80,77%">
+        <circle cx="92.5" cy="92.5" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="92.5" cy="92.5" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="312.15 77.41" stroke-dashoffset="-0.00" transform="rotate(-90 92.5 92.5)"><title>nilai utama: 80,77% (21)</title></circle>
+        <circle cx="92.5" cy="92.5" r="42" fill="#f7f4ea"/>
+        <text x="92.5" y="89.5" text-anchor="middle" class="donut-emoji">🍅</text>
+        <text x="92.5" y="115.5" text-anchor="middle" class="donut-center">80,77%</text>
+    </svg>
+        </div>
+        <div>
+          <h3 class="summary-title">Pascapanen</h3>
+          <p><strong>80,77%</strong> pernah mengalami buah atau sayuran rusak sebelum sempat dikonsumsi.</p>
+          <span class="summary-tag">TEMUAN UTAMA</span>
+        </div>
+      </article>
+      
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-icon">✦</div>
+      <div>
+        <h3>Angka besar, cerita yang lebih besar.</h3>
+        <p>
+          Mayoritas responden sudah punya pengalaman atau pengetahuan awal tentang ketiga topik.
+          Artinya, TANAHITA bisa hadir bukan dari nol, tetapi sebagai jembatan untuk membuat
+          pengetahuan itu lebih praktis dan mudah dipakai.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-wrap" id="detail-survei">
+    <div class="section-intro">
+      <p class="eyebrow">20 PERTANYAAN · 26 RESPONDEN</p>
+      <h2>Lihat jawabannya,<br>satu per satu.</h2>
+      <p>
+        Pilih topik untuk memfilter diagram. Setiap lingkaran menunjukkan pembagian jawaban,
+        sementara bagian “yang paling banyak dipilih” membantu menangkap inti hasilnya dalam sekali lihat.
+      </p>
+    </div>
+
+    <div class="filter-bar" role="group" aria-label="Filter hasil survei">
+      <button class="filter-btn active" data-filter="semua">✨ Semua</button>
+      <button class="filter-btn" data-filter="tanah">🌱 Tanah</button>
+      <button class="filter-btn" data-filter="erosi">💦 Erosi</button>
+      <button class="filter-btn" data-filter="pascapanen">🍅 Pascapanen</button>
+    </div>
+
+    <div class="question-grid">
+      
+    <article class="question-card" data-topic="tanah">
+      <div class="question-top">
+        <span class="question-number">01</span>
+        <span class="question-topic">tanah</span>
+      </div>
+      <h3>Pengetahuan tentang jenis tanah</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 50%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="117.37 272.19" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Ya: 30,77% (8)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="192.28 197.28" stroke-dashoffset="-119.87" transform="rotate(-90 90.0 90.0)"><title>Sedikit mengetahui: 50% (13)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="72.41 317.15" stroke-dashoffset="-314.65" transform="rotate(-90 90.0 90.0)"><title>Tidak mengetahui: 19,23% (5)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🪨</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">50%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Sedikit mengetahui</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Ya</span>
+          <strong>30,77%</strong>
+          <small>8 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Sedikit mengetahui</span>
+          <strong>50%</strong>
+          <small>13 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak mengetahui</span>
+          <strong>19,23%</strong>
+          <small>5 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="tanah">
+      <div class="question-top">
+        <span class="question-number">02</span>
+        <span class="question-topic">tanah</span>
+      </div>
+      <h3>Setiap jenis tanah punya karakteristik berbeda</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 80,77%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="312.15 77.41" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Ya: 80,77% (21)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="57.52 332.04" stroke-dashoffset="-314.65" transform="rotate(-90 90.0 90.0)"><title>Kurang tahu: 15,38% (4)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-374.56" transform="rotate(-90 90.0 90.0)"><title>Tidak: 3,85% (1)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🌱</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">80,77%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Ya</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Ya</span>
+          <strong>80,77%</strong>
+          <small>21 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Kurang tahu</span>
+          <strong>15,38%</strong>
+          <small>4 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="tanah">
+      <div class="question-top">
+        <span class="question-number">03</span>
+        <span class="question-topic">tanah</span>
+      </div>
+      <h3>Pengaruh jenis tanah terhadap pertumbuhan tanaman</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 76,92%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="297.15 92.41" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Sangat berpengaruh: 76,92% (20)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="87.41 302.15" stroke-dashoffset="-299.65" transform="rotate(-90 90.0 90.0)"><title>Cukup berpengaruh: 23,08% (6)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🌿</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">76,92%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Sangat berpengaruh</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Sangat berpengaruh</span>
+          <strong>76,92%</strong>
+          <small>20 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Cukup berpengaruh</span>
+          <strong>23,08%</strong>
+          <small>6 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak terlalu berpengaruh</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Tidak tahu</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="tanah">
+      <div class="question-top">
+        <span class="question-number">04</span>
+        <span class="question-topic">tanah</span>
+      </div>
+      <h3>Pemahaman tentang pH tanah</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 57,69%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="162.32 227.24" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Pernah dan memahami: 42,31% (11)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="222.24 167.32" stroke-dashoffset="-164.82" transform="rotate(-90 90.0 90.0)"><title>Pernah tetapi kurang memahami: 57,69% (15)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🧪</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">57,69%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Pernah tetapi kurang memahami</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Pernah dan memahami</span>
+          <strong>42,31%</strong>
+          <small>11 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Pernah tetapi kurang memahami</span>
+          <strong>57,69%</strong>
+          <small>15 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Belum pernah</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="tanah">
+      <div class="question-top">
+        <span class="question-number">05</span>
+        <span class="question-topic">tanah</span>
+      </div>
+      <h3>Kondisi tanah perlu diperhatikan sebelum menanam</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 73,08%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="282.19 107.37" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Sangat perlu: 73,08% (19)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="102.37 287.19" stroke-dashoffset="-284.69" transform="rotate(-90 90.0 90.0)"><title>Perlu: 26,92% (7)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">💧</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">73,08%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Sangat perlu</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Sangat perlu</span>
+          <strong>73,08%</strong>
+          <small>19 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Perlu</span>
+          <strong>26,92%</strong>
+          <small>7 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak terlalu perlu</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Tidak tahu</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="tanah">
+      <div class="question-top">
+        <span class="question-number">06</span>
+        <span class="question-topic">tanah</span>
+      </div>
+      <h3>Tanaman sulit tumbuh karena tanah bermasalah</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 50%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="192.28 197.28" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Selalu: 50% (13)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="192.28 197.28" stroke-dashoffset="-194.78" transform="rotate(-90 90.0 90.0)"><title>Kadang-kadang: 50% (13)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🌧️</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">50%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Selalu</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Selalu</span>
+          <strong>50%</strong>
+          <small>13 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Kadang-kadang</span>
+          <strong>50%</strong>
+          <small>13 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak pernah</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Tidak tahu</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="tanah">
+      <div class="question-top">
+        <span class="question-number">07</span>
+        <span class="question-topic">tanah</span>
+      </div>
+      <h3>Informasi tentang tanah yang paling ingin diketahui</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 30,77%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="87.41 302.15" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Jenis-jenis tanah: 23,08% (6)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-89.91" transform="rotate(-90 90.0 90.0)"><title>Cara mengetahui kondisi tanah: 7,69% (2)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-119.87" transform="rotate(-90 90.0 90.0)"><title>pH tanah: 3,85% (1)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#6b8f71" stroke-width="20" stroke-linecap="round" stroke-dasharray="87.41 302.15" stroke-dashoffset="-134.86" transform="rotate(-90 90.0 90.0)"><title>Kesuburan tanah: 23,08% (6)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#8f6aa8" stroke-width="20" stroke-linecap="round" stroke-dasharray="117.37 272.19" stroke-dashoffset="-224.77" transform="rotate(-90 90.0 90.0)"><title>Kesesuaian tanah dengan tanaman: 30,77% (8)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#4d8ca8" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-344.64" transform="rotate(-90 90.0 90.0)"><title>Cara memperbaiki kondisi tanah: 7,69% (2)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#c56c78" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-374.60" transform="rotate(-90 90.0 90.0)"><title>Lainnya: 3,85% (1)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🔎</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">30,77%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Kesesuaian tanah dengan tanaman</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Jenis-jenis tanah</span>
+          <strong>23,08%</strong>
+          <small>6 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Cara mengetahui kondisi tanah</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">pH tanah</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Kesuburan tanah</span>
+          <strong>23,08%</strong>
+          <small>6 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#8f6aa8"></span>
+          <span class="legend-label">Kesesuaian tanah dengan tanaman</span>
+          <strong>30,77%</strong>
+          <small>8 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#4d8ca8"></span>
+          <span class="legend-label">Cara memperbaiki kondisi tanah</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#c56c78"></span>
+          <span class="legend-label">Lainnya</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="erosi">
+      <div class="question-top">
+        <span class="question-number">08</span>
+        <span class="question-topic">erosi</span>
+      </div>
+      <h3>Pernah melihat tanah terkikis setelah hujan atau aliran air</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 88,46%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="342.10 47.45" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Pernah: 88,46% (23)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-344.60" transform="rotate(-90 90.0 90.0)"><title>Tidak pernah: 3,85% (1)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-359.60" transform="rotate(-90 90.0 90.0)"><title>Tidak yakin: 7,69% (2)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🌊</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">88,46%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Pernah</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Pernah</span>
+          <strong>88,46%</strong>
+          <small>23 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Tidak pernah</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak yakin</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="erosi">
+      <div class="question-top">
+        <span class="question-number">09</span>
+        <span class="question-topic">erosi</span>
+      </div>
+      <h3>Pengetahuan tentang istilah “erosi tanah”</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 53,85%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="177.28 212.28" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Ya, dan memahami: 46,15% (12)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="207.28 182.28" stroke-dashoffset="-179.78" transform="rotate(-90 90.0 90.0)"><title>Pernah mendengar tapi kurang memahami: 53,85% (14)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🌀</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">53,85%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Pernah mendengar tapi kurang memahami</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Ya, dan memahami</span>
+          <strong>46,15%</strong>
+          <small>12 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Pernah mendengar tapi kurang memahami</span>
+          <strong>53,85%</strong>
+          <small>14 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Belum pernah</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="erosi">
+      <div class="question-top">
+        <span class="question-number">10</span>
+        <span class="question-topic">erosi</span>
+      </div>
+      <h3>Menurut responden, penyebab utama erosi tanah</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 34,62%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="132.36 257.19" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Air hujan: 34,62% (9)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="117.37 272.19" stroke-dashoffset="-134.86" transform="rotate(-90 90.0 90.0)"><title>Aliran air: 30,77% (8)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#6b8f71" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-254.73" transform="rotate(-90 90.0 90.0)"><title>Aktivitas manusia: 7,69% (2)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#8f6aa8" stroke-width="20" stroke-linecap="round" stroke-dasharray="72.41 317.15" stroke-dashoffset="-284.69" transform="rotate(-90 90.0 90.0)"><title>Penggundulan vegetasi: 19,23% (5)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#4d8ca8" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-359.60" transform="rotate(-90 90.0 90.0)"><title>Tidak tahu: 7,69% (2)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🌬️</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">34,62%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Air hujan</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Air hujan</span>
+          <strong>34,62%</strong>
+          <small>9 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Aliran air</span>
+          <strong>30,77%</strong>
+          <small>8 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Angin</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Aktivitas manusia</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#8f6aa8"></span>
+          <span class="legend-label">Penggundulan vegetasi</span>
+          <strong>19,23%</strong>
+          <small>5 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#4d8ca8"></span>
+          <span class="legend-label">Tidak tahu</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="erosi">
+      <div class="question-top">
+        <span class="question-number">11</span>
+        <span class="question-topic">erosi</span>
+      </div>
+      <h3>Erosi mengurangi kualitas tanah untuk pertanian</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 73,08%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="282.19 107.37" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Ya: 73,08% (19)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-284.69" transform="rotate(-90 90.0 90.0)"><title>Tidak: 7,69% (2)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="72.41 317.15" stroke-dashoffset="-314.65" transform="rotate(-90 90.0 90.0)"><title>Kurang tahu: 19,23% (5)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🛡️</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">73,08%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Ya</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Ya</span>
+          <strong>73,08%</strong>
+          <small>19 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Tidak</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Kurang tahu</span>
+          <strong>19,23%</strong>
+          <small>5 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="erosi">
+      <div class="question-top">
+        <span class="question-number">12</span>
+        <span class="question-topic">erosi</span>
+      </div>
+      <h3>Pengetahuan tentang jenis-jenis erosi</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 42,31%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="72.41 317.15" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Mengetahui: 19,23% (5)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="147.32 242.23" stroke-dashoffset="-74.91" transform="rotate(-90 90.0 90.0)"><title>Pernah mendengar: 38,46% (10)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="162.32 227.24" stroke-dashoffset="-224.74" transform="rotate(-90 90.0 90.0)"><title>Tidak mengetahui: 42,31% (11)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🪨</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">42,31%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Tidak mengetahui</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Mengetahui</span>
+          <strong>19,23%</strong>
+          <small>5 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Pernah mendengar</span>
+          <strong>38,46%</strong>
+          <small>10 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak mengetahui</span>
+          <strong>42,31%</strong>
+          <small>11 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="erosi">
+      <div class="question-top">
+        <span class="question-number">13</span>
+        <span class="question-topic">erosi</span>
+      </div>
+      <h3>Pentingnya upaya mencegah erosi pada lahan pertanian</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 69,23%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="267.19 122.37" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Sangat penting: 69,23% (18)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="87.41 302.15" stroke-dashoffset="-269.69" transform="rotate(-90 90.0 90.0)"><title>Penting: 23,08% (6)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#6b8f71" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-359.60" transform="rotate(-90 90.0 90.0)"><title>Tidak tahu: 7,69% (2)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🌾</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">69,23%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Sangat penting</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Sangat penting</span>
+          <strong>69,23%</strong>
+          <small>18 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Penting</span>
+          <strong>23,08%</strong>
+          <small>6 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Kurang penting</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Tidak tahu</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="erosi">
+      <div class="question-top">
+        <span class="question-number">14</span>
+        <span class="question-topic">erosi</span>
+      </div>
+      <h3>Informasi tentang erosi yang paling ingin diketahui</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 26,92%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Jenis-jenis erosi: 7,69% (2)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="57.52 332.04" stroke-dashoffset="-29.96" transform="rotate(-90 90.0 90.0)"><title>Penyebab erosi: 15,38% (4)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="72.41 317.15" stroke-dashoffset="-89.87" transform="rotate(-90 90.0 90.0)"><title>Cara mengenali erosi: 19,23% (5)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#6b8f71" stroke-width="20" stroke-linecap="round" stroke-dasharray="102.37 287.19" stroke-dashoffset="-164.78" transform="rotate(-90 90.0 90.0)"><title>Dampak erosi: 26,92% (7)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#8f6aa8" stroke-width="20" stroke-linecap="round" stroke-dasharray="87.41 302.15" stroke-dashoffset="-269.65" transform="rotate(-90 90.0 90.0)"><title>Cara mencegah erosi: 23,08% (6)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#4d8ca8" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-359.56" transform="rotate(-90 90.0 90.0)"><title>Contoh erosi di lingkungan sekitar: 3,85% (1)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#c56c78" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-374.56" transform="rotate(-90 90.0 90.0)"><title>Lainnya: 3,85% (1)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">💡</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">26,92%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Dampak erosi</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Jenis-jenis erosi</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Penyebab erosi</span>
+          <strong>15,38%</strong>
+          <small>4 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Cara mengenali erosi</span>
+          <strong>19,23%</strong>
+          <small>5 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Dampak erosi</span>
+          <strong>26,92%</strong>
+          <small>7 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#8f6aa8"></span>
+          <span class="legend-label">Cara mencegah erosi</span>
+          <strong>23,08%</strong>
+          <small>6 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#4d8ca8"></span>
+          <span class="legend-label">Contoh erosi di lingkungan sekitar</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#c56c78"></span>
+          <span class="legend-label">Lainnya</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="pascapanen">
+      <div class="question-top">
+        <span class="question-number">15</span>
+        <span class="question-topic">pascapanen</span>
+      </div>
+      <h3>Buah atau sayuran di rumah rusak sebelum sempat dikonsumsi</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 57,69%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="87.41 302.15" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Sering: 23,08% (6)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="222.24 167.32" stroke-dashoffset="-89.91" transform="rotate(-90 90.0 90.0)"><title>Kadang-kadang: 57,69% (15)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="57.52 332.04" stroke-dashoffset="-314.65" transform="rotate(-90 90.0 90.0)"><title>Jarang: 15,38% (4)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#6b8f71" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-374.56" transform="rotate(-90 90.0 90.0)"><title>Tidak pernah: 3,85% (1)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🍅</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">57,69%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Kadang-kadang</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Sering</span>
+          <strong>23,08%</strong>
+          <small>6 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Kadang-kadang</span>
+          <strong>57,69%</strong>
+          <small>15 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Jarang</span>
+          <strong>15,38%</strong>
+          <small>4 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Tidak pernah</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="pascapanen">
+      <div class="question-top">
+        <span class="question-number">16</span>
+        <span class="question-topic">pascapanen</span>
+      </div>
+      <h3>Penyebab utama buah atau sayuran cepat rusak</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 46,15%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="102.37 287.19" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Suhu penyimpanan: 26,92% (7)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="57.52 332.04" stroke-dashoffset="-104.87" transform="rotate(-90 90.0 90.0)"><title>Kelembapan: 15,38% (4)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-164.78" transform="rotate(-90 90.0 90.0)"><title>Mikroorganisme: 3,85% (1)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#8f6aa8" stroke-width="20" stroke-linecap="round" stroke-dasharray="177.28 212.28" stroke-dashoffset="-179.78" transform="rotate(-90 90.0 90.0)"><title>Cara penyimpanan salah: 46,15% (12)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#4d8ca8" stroke-width="20" stroke-linecap="round" stroke-dasharray="28.76 360.80" stroke-dashoffset="-359.56" transform="rotate(-90 90.0 90.0)"><title>Tidak tahu: 7,69% (2)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🌡️</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">46,15%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Cara penyimpanan salah</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Suhu penyimpanan</span>
+          <strong>26,92%</strong>
+          <small>7 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Kelembapan</span>
+          <strong>15,38%</strong>
+          <small>4 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Mikroorganisme</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Benturan atau kerusakan fisik</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#8f6aa8"></span>
+          <span class="legend-label">Cara penyimpanan salah</span>
+          <strong>46,15%</strong>
+          <small>12 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#4d8ca8"></span>
+          <span class="legend-label">Tidak tahu</span>
+          <strong>7,69%</strong>
+          <small>2 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="pascapanen">
+      <div class="question-top">
+        <span class="question-number">17</span>
+        <span class="question-topic">pascapanen</span>
+      </div>
+      <h3>Setiap jenis buah dan sayuran punya kondisi penyimpanan berbeda</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 65,38%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="252.19 137.36" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Ya: 65,38% (17)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="117.37 272.19" stroke-dashoffset="-254.69" transform="rotate(-90 90.0 90.0)"><title>Sedikit tahu: 30,77% (8)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-374.56" transform="rotate(-90 90.0 90.0)"><title>Tidak tahu: 3,85% (1)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🥕</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">65,38%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Ya</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Ya</span>
+          <strong>65,38%</strong>
+          <small>17 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Sedikit tahu</span>
+          <strong>30,77%</strong>
+          <small>8 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak tahu</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="pascapanen">
+      <div class="question-top">
+        <span class="question-number">18</span>
+        <span class="question-topic">pascapanen</span>
+      </div>
+      <h3>Cara menyimpan buah dan sayuran di rumah</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 50%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="192.28 197.28" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Di dalam kulkas: 50% (13)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#6b8f71" stroke-width="20" stroke-linecap="round" stroke-dasharray="192.28 197.28" stroke-dashoffset="-194.78" transform="rotate(-90 90.0 90.0)"><title>Tergantung jenisnya: 50% (13)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🧺</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">50%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Di dalam kulkas</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Di dalam kulkas</span>
+          <strong>50%</strong>
+          <small>13 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Di suhu ruang</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Di tempat tertutup</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Tergantung jenisnya</span>
+          <strong>50%</strong>
+          <small>13 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#8f6aa8"></span>
+          <span class="legend-label">Tidak memiliki cara khusus</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="pascapanen">
+      <div class="question-top">
+        <span class="question-number">19</span>
+        <span class="question-topic">pascapanen</span>
+      </div>
+      <h3>Buah atau sayuran tertentu sebaiknya tidak disimpan bersama</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 42,31%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="162.32 227.24" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Ya: 42,31% (11)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="162.32 227.24" stroke-dashoffset="-164.82" transform="rotate(-90 90.0 90.0)"><title>Pernah mendengar: 42,31% (11)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="57.52 332.04" stroke-dashoffset="-329.64" transform="rotate(-90 90.0 90.0)"><title>Tidak tahu: 15,38% (4)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">🍌</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">42,31%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Ya</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Ya</span>
+          <strong>42,31%</strong>
+          <small>11 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Pernah mendengar</span>
+          <strong>42,31%</strong>
+          <small>11 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Tidak tahu</span>
+          <strong>15,38%</strong>
+          <small>4 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    <article class="question-card" data-topic="pascapanen">
+      <div class="question-top">
+        <span class="question-number">20</span>
+        <span class="question-topic">pascapanen</span>
+      </div>
+      <h3>Informasi penyimpanan hasil pertanian yang paling ingin diketahui</h3>
+      <div class="question-body">
+        <div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Diagram lingkaran 53,85%">
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e8e3d6" stroke-width="20"/>
+        <circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#1f4d3a" stroke-width="20" stroke-linecap="round" stroke-dasharray="43.16 346.40" stroke-dashoffset="-0.00" transform="rotate(-90 90.0 90.0)"><title>Cara menyimpan buah: 11,54% (3)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#d9794c" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-44.95" transform="rotate(-90 90.0 90.0)"><title>Cara menyimpan sayuran: 3,85% (1)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#e7b84b" stroke-width="20" stroke-linecap="round" stroke-dasharray="43.16 346.40" stroke-dashoffset="-59.95" transform="rotate(-90 90.0 90.0)"><title>Suhu penyimpanan: 11,54% (3)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#6b8f71" stroke-width="20" stroke-linecap="round" stroke-dasharray="57.52 332.04" stroke-dashoffset="-104.91" transform="rotate(-90 90.0 90.0)"><title>Penyebab buah cepat busuk: 15,38% (4)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#8f6aa8" stroke-width="20" stroke-linecap="round" stroke-dasharray="207.28 182.28" stroke-dashoffset="-164.82" transform="rotate(-90 90.0 90.0)"><title>Cara memperpanjang masa simpan: 53,85% (14)</title></circle><circle cx="90.0" cy="90.0" r="62" fill="none" stroke="#4d8ca8" stroke-width="20" stroke-linecap="round" stroke-dasharray="14.40 375.16" stroke-dashoffset="-374.60" transform="rotate(-90 90.0 90.0)"><title>Tanda-tanda kerusakan: 3,85% (1)</title></circle>
+        <circle cx="90.0" cy="90.0" r="42" fill="#f7f4ea"/>
+        <text x="90.0" y="87.0" text-anchor="middle" class="donut-emoji">✨</text>
+        <text x="90.0" y="113.0" text-anchor="middle" class="donut-center">53,85%</text>
+    </svg></div>
+        <div class="legend-panel">
+          <div class="winner"><span>Yang paling banyak dipilih</span><strong>Cara memperpanjang masa simpan</strong></div>
+          <ul class="legend-list"><li>
+          <span class="legend-dot" style="--dot:#1f4d3a"></span>
+          <span class="legend-label">Cara menyimpan buah</span>
+          <strong>11,54%</strong>
+          <small>3 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#d9794c"></span>
+          <span class="legend-label">Cara menyimpan sayuran</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#e7b84b"></span>
+          <span class="legend-label">Suhu penyimpanan</span>
+          <strong>11,54%</strong>
+          <small>3 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#6b8f71"></span>
+          <span class="legend-label">Penyebab buah cepat busuk</span>
+          <strong>15,38%</strong>
+          <small>4 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#8f6aa8"></span>
+          <span class="legend-label">Cara memperpanjang masa simpan</span>
+          <strong>53,85%</strong>
+          <small>14 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#4d8ca8"></span>
+          <span class="legend-label">Tanda-tanda kerusakan</span>
+          <strong>3,85%</strong>
+          <small>1 responden</small>
+        </li><li>
+          <span class="legend-dot" style="--dot:#c56c78"></span>
+          <span class="legend-label">Lainnya</span>
+          <strong>0%</strong>
+          <small>0 responden</small>
+        </li></ul>
+        </div>
+      </div>
+      <div class="card-foot"><span>26 responden</span><span>● data kuesioner</span></div>
+    </article>
+    
+    </div>
+  </section>
+
+  <section class="cta-survey">
+    <p class="eyebrow">LANJUTKAN</p>
+    <h2>Yuk mulai<br>belajar bersama.</h2>
+    <p>
+      Hasil survei ini menjadi salah satu alasan TANAHITA dibuat sebagai media edukasi
+      yang sederhana, menarik, dan mudah dipahami.
+    </p>
+    <a class="cta-link" href="eksplorasi.html">Mulai Eksplorasi →</a>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-logo">TANAHITA</div>
+  <p>Kenali tanahnya. Lindungi lahannya. Jaga hasilnya.</p>
+  <span>© 2026 Tanahita — Edukasi Teknologi Pertanian</span>
+</footer>
+
+<script>
+(function() {
+  const buttons = document.querySelectorAll(".filter-btn");
+  const cards = document.querySelectorAll(".question-card");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const filter = btn.dataset.filter;
+      buttons.forEach(b => b.classList.toggle("active", b === btn));
+      cards.forEach(card => {
+        const show = filter === "semua" || card.dataset.topic === filter;
+        card.classList.toggle("hidden", !show);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
