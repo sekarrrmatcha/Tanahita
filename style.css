@@ -19192,53 +19192,395 @@ summary span {
   }
 }
 
+/* =========================================================
+   TANAHITA — MOBILE RESPONSIVE FINAL PATCH
+   Appended only. Existing master CSS above is preserved.
+   ========================================================= */
 
-/* ==========================================================
-   HERO ECOSYSTEM V2 — visual mengikuti konsep mini ekosistem
-   Tambahan scoped. CSS master sebelumnya tidak dihapus.
-   ========================================================== */
-.soil-hero-visual-v2{min-height:560px;align-items:center;overflow:visible}
-.soil-hero .soil-ecosystem-v2{
-  position:relative;width:min(700px,100%);height:600px;overflow:visible;isolation:isolate;
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
-.soil-hero .ecosystem-halo{position:absolute;border-radius:50%;pointer-events:none;z-index:0}
-.soil-hero .halo-one{width:520px;height:420px;right:-10px;top:60px;background:rgba(225,237,218,.72);filter:blur(1px);animation:ecosystemHalo 7s ease-in-out infinite}
-.soil-hero .halo-two{width:260px;height:260px;right:100px;top:30px;background:rgba(240,246,225,.78);animation:ecosystemHalo 9s ease-in-out infinite reverse}
-.soil-hero .ecosystem-sun{position:absolute;right:128px;top:74px;width:54px;height:54px;border-radius:50%;background:rgba(250,220,112,.78);box-shadow:0 0 30px rgba(249,218,106,.25);z-index:1;animation:sunPulse 5s ease-in-out infinite}
-.soil-hero .ecosystem-cloud{position:absolute;width:90px;height:24px;border-radius:50px;background:rgba(255,255,255,.72);z-index:2;filter:blur(.2px);animation:cloudFloat 8s ease-in-out infinite}
-.soil-hero .ecosystem-cloud::before,.soil-hero .ecosystem-cloud::after{content:"";position:absolute;border-radius:50%;background:inherit}
-.soil-hero .ecosystem-cloud::before{width:34px;height:34px;left:17px;top:-16px}.soil-hero .ecosystem-cloud::after{width:42px;height:42px;right:13px;top:-20px}
-.soil-hero .cloud-one{right:250px;top:115px}.soil-hero .cloud-two{right:42px;top:185px;transform:scale(.82);animation-delay:-3s}
 
-.soil-hero .ecosystem-life-card{position:absolute;left:22px;top:45px;width:275px;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:18px;background:#2b5a3e;color:#fff;box-shadow:0 18px 34px rgba(47,76,55,.16);z-index:20;animation:cardFloat 5.5s ease-in-out infinite}
-.soil-hero .life-card-icon{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:12px;background:#f8f5e9;font-size:25px}
-.soil-hero .ecosystem-life-card small{display:block;font-size:8px;letter-spacing:.15em;font-weight:800;opacity:.65;margin-bottom:2px}.soil-hero .ecosystem-life-card strong{display:block;font-size:16px;line-height:1.2}.soil-hero .ecosystem-life-card p{margin:4px 0 0;color:rgba(255,255,255,.78);font-size:10px;line-height:1.45}
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
-.soil-hero .soil-block-v2{position:absolute;right:55px;bottom:72px;width:500px;height:310px;border-radius:30px 30px 34px 34px;background:linear-gradient(180deg,#765039 0 26%,#68432f 26% 100%);box-shadow:0 28px 42px rgba(71,52,37,.18);overflow:hidden;z-index:6}
-.soil-hero .soil-block-v2::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 33%,rgba(255,215,159,.25) 0 2px,transparent 3px),radial-gradient(circle at 72% 56%,rgba(255,215,159,.18) 0 2px,transparent 3px),radial-gradient(circle at 50% 78%,rgba(255,255,255,.12) 0 2px,transparent 3px);pointer-events:none;z-index:2}
-.soil-hero .soil-surface-v2{position:absolute;left:0;right:0;top:0;height:34px;background:linear-gradient(180deg,#9cae78,#6f8e59);z-index:4}.soil-hero .soil-grass-cap{position:absolute;left:8px;right:8px;top:-15px;height:35px;z-index:5}.soil-hero .soil-grass-cap i{position:absolute;bottom:4px;width:4px;height:22px;border-radius:99px;background:#52783f;transform-origin:bottom;animation:grassV2 2.7s ease-in-out infinite}.soil-hero .soil-grass-cap i:nth-child(1){left:8%}.soil-hero .soil-grass-cap i:nth-child(2){left:19%;height:16px;animation-delay:-.4s}.soil-hero .soil-grass-cap i:nth-child(3){left:31%;height:23px;animation-delay:-.8s}.soil-hero .soil-grass-cap i:nth-child(4){left:46%;height:17px;animation-delay:-1.2s}.soil-hero .soil-grass-cap i:nth-child(5){left:63%;height:25px;animation-delay:-1.6s}.soil-hero .soil-grass-cap i:nth-child(6){left:78%;height:18px;animation-delay:-2s}.soil-hero .soil-grass-cap i:nth-child(7){left:91%;height:22px;animation-delay:-2.4s}
-.soil-hero .soil-layer-v2{position:absolute;left:0;right:0;z-index:1}.soil-hero .layer-rich{top:34px;height:105px;background:linear-gradient(180deg,#80573b,#70472f)}.soil-hero .layer-deep{top:139px;bottom:0;background:linear-gradient(180deg,#6a4430,#583725)}
-.soil-hero .soil-rock{position:absolute;border-radius:45% 55% 50% 42%;background:#8d765c;box-shadow:inset 5px 5px 0 rgba(255,255,255,.08),0 3px 7px rgba(47,32,23,.15);z-index:3}.soil-hero .rock-one{width:38px;height:28px;right:42px;bottom:31px;transform:rotate(-12deg)}.soil-hero .rock-two{width:29px;height:22px;left:46px;bottom:45px;transform:rotate(14deg)}.soil-hero .rock-three{width:22px;height:18px;left:100px;top:194px}.soil-hero .rock-four{width:44px;height:31px;right:125px;bottom:42px;transform:rotate(8deg)}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-.soil-hero .ecosystem-plant{position:absolute;right:222px;bottom:325px;width:155px;height:255px;z-index:12;transform-origin:50% 100%;animation:plantV2Sway 5.5s ease-in-out infinite}
-.soil-hero .plant-stem{position:absolute;left:73px;bottom:0;width:10px;height:205px;border-radius:99px;background:linear-gradient(90deg,#4f8b35,#79ad3f,#4e8531);box-shadow:3px 4px 10px rgba(45,84,37,.14)}
-.soil-hero .plant-leaf{position:absolute;background:linear-gradient(135deg,#9bd83c,#5a9c2f);border-radius:100% 10% 100% 10%;box-shadow:0 8px 12px rgba(52,91,36,.12);transform-origin:bottom left}.soil-hero .leaf-a{width:88px;height:44px;left:68px;top:20px;transform:rotate(-12deg);animation:leafV2A 4s ease-in-out infinite}.soil-hero .leaf-b{width:78px;height:38px;left:0;top:62px;transform:scaleX(-1) rotate(-20deg);animation:leafV2B 4.5s ease-in-out infinite}.soil-hero .leaf-c{width:94px;height:46px;left:68px;top:85px;transform:rotate(-8deg);animation:leafV2C 5s ease-in-out infinite}.soil-hero .leaf-d{width:70px;height:34px;left:2px;top:130px;transform:scaleX(-1) rotate(-15deg);animation:leafV2B 4.2s ease-in-out infinite reverse}.soil-hero .leaf-e{width:72px;height:36px;left:69px;top:150px;transform:rotate(-5deg);animation:leafV2A 4.8s ease-in-out infinite reverse}
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+}
 
-.soil-hero .soil-root-network{position:absolute;left:50%;top:18px;width:230px;height:285px;transform:translateX(-50%);z-index:7;pointer-events:none}.soil-hero .root-v2{position:absolute;display:block;border-radius:99px;background:linear-gradient(180deg,#d8ad72,#b77b49);transform-origin:top center;box-shadow:0 0 7px rgba(242,189,117,.18)}.soil-hero .root-main-v2{left:50%;top:-2px;width:7px;height:238px;transform:translateX(-50%) rotate(1deg);animation:rootGlowV2 3.8s ease-in-out infinite}.soil-hero .root-branch-v2{width:5px;height:125px}.soil-hero .root-b1{left:50%;top:78px;transform:rotate(33deg)}.soil-hero .root-b2{left:48%;top:102px;transform:rotate(-34deg)}.soil-hero .root-b3{left:50%;top:142px;transform:rotate(48deg)}.soil-hero .root-b4{left:48%;top:158px;transform:rotate(-53deg)}.soil-hero .root-b5{left:50%;top:188px;transform:rotate(65deg)}.soil-hero .root-fine-v2{width:2px;height:70px;background:#e0bc83;opacity:.8}.soil-hero .fine-1{left:41%;top:146px;transform:rotate(62deg)}.soil-hero .fine-2{left:59%;top:171px;transform:rotate(-63deg)}.soil-hero .fine-3{left:38%;top:207px;transform:rotate(75deg)}.soil-hero .fine-4{left:62%;top:218px;transform:rotate(-72deg)}
+button, a, input, select, textarea {
+  max-width: 100%;
+}
 
-.soil-hero .soil-water-v2,.soil-hero .soil-air-v2,.soil-hero .soil-organisms-v2{position:absolute;inset:34px 0 0;z-index:10;pointer-events:none}.soil-hero .water-v2{position:absolute;font-size:19px;filter:drop-shadow(0 5px 5px rgba(36,101,135,.16));animation:waterV2 4.8s linear infinite}.soil-hero .w1{left:24%;top:10%;animation-delay:-.5s}.soil-hero .w2{left:65%;top:18%;animation-delay:-2s}.soil-hero .w3{left:51%;top:46%;animation-delay:-3.5s}.soil-hero .w4{left:74%;top:68%;color:#9ed7ef;font-size:24px;animation:microV2 2.8s ease-in-out infinite}
-.soil-hero .soil-air-v2 span{position:absolute;width:14px;height:14px;border:2px solid rgba(210,230,213,.42);border-radius:50%;animation:airV2 3.7s ease-in-out infinite}.soil-hero .soil-air-v2 span:nth-child(1){left:20%;top:27%}.soil-hero .soil-air-v2 span:nth-child(2){left:72%;top:31%;animation-delay:-.8s}.soil-hero .soil-air-v2 span:nth-child(3){left:29%;top:63%;animation-delay:-1.6s}.soil-hero .soil-air-v2 span:nth-child(4){right:20%;top:59%;animation-delay:-2.4s}.soil-hero .soil-air-v2 span:nth-child(5){right:39%;top:73%;animation-delay:-3s}
-.soil-hero .worm-v2{position:absolute;left:20%;bottom:25px;font-size:40px;color:#bf7656;transform:rotate(-7deg);animation:wormV2 6s ease-in-out infinite}.soil-hero .micro-v2{position:absolute;color:#d4bd79;font-size:20px;animation:microV2 3s ease-in-out infinite}.soil-hero .m1{left:29%;top:54%;animation-delay:-.5s}.soil-hero .m2{right:28%;top:62%;animation-delay:-1.2s}.soil-hero .m3{left:55%;bottom:18%;animation-delay:-1.8s}.soil-hero .m4{right:15%;top:36%;animation-delay:-2.4s}.soil-hero .organic-piece{position:absolute;color:#d5a066;font-size:20px;z-index:11;animation:organicV2 4.8s ease-in-out infinite}.soil-hero .op1{left:37%;top:14%}.soil-hero .op2{left:23%;top:72%;animation-delay:-1.5s}.soil-hero .op3{right:21%;top:18%;animation-delay:-2.5s}
+button, .button, .btn-primary, .btn-secondary {
+  touch-action: manipulation;
+}
 
-.soil-hero .ecosystem-label-v2{position:absolute;z-index:25;display:flex;gap:11px;align-items:flex-start;width:205px;padding:13px 15px;border-radius:18px;background:rgba(255,253,248,.94);color:#244b35;box-shadow:0 15px 28px rgba(57,67,53,.11);backdrop-filter:blur(10px);animation:labelV2 4.8s ease-in-out infinite}.soil-hero .ecosystem-label-v2>span{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;font-size:19px}.soil-hero .ecosystem-label-v2 strong{display:block;font-size:13px;line-height:1.1}.soil-hero .ecosystem-label-v2 small{display:block;margin-top:4px;font-size:9px;line-height:1.45;color:#617067}.soil-hero .label-organic-v2{left:4px;top:205px}.soil-hero .label-air-v2{right:-10px;top:196px;animation-delay:-1.2s}.soil-hero .label-water-v2{left:0;top:370px;animation-delay:-2s}.soil-hero .label-root-v2{right:-5px;top:370px;animation-delay:-.6s}.soil-hero .label-life-v2{left:14px;bottom:88px;animation-delay:-2.8s}
-.soil-hero .ecosystem-label-v2::after{content:"";position:absolute;width:46px;height:1px;background:rgba(68,91,67,.45);top:50%;right:-46px}.soil-hero .label-air-v2::after,.soil-hero .label-root-v2::after{left:-46px;right:auto}.soil-hero .label-water-v2::after,.soil-hero .label-life-v2::after{right:-42px}
+pre, code {
+  max-width: 100%;
+}
 
-.soil-hero .ecosystem-legend-v2{position:absolute;right:30px;bottom:5px;display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:18px;background:rgba(255,253,248,.78);box-shadow:0 12px 28px rgba(63,72,57,.08);backdrop-filter:blur(8px);z-index:30;color:#355843;font-size:9px}.soil-hero .ecosystem-legend-v2 strong{font-size:10px;margin-right:5px}.soil-hero .ecosystem-legend-v2 span{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.78);font-weight:700;white-space:nowrap}
+pre {
+  overflow-x: auto;
+}
 
-@keyframes ecosystemHalo{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.04);opacity:.95}}@keyframes sunPulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:1}}@keyframes cloudFloat{0%,100%{transform:translateX(0)}50%{transform:translateX(-12px)}}@keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}@keyframes plantV2Sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1.4deg)}}@keyframes leafV2A{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(-4deg) translateY(-2px)}}@keyframes leafV2B{0%,100%{transform:scaleX(-1) rotate(-20deg)}50%{transform:scaleX(-1) rotate(-11deg) translateY(-2px)}}@keyframes leafV2C{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(2deg) translateY(-2px)}}@keyframes grassV2{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(8deg)}}@keyframes rootGlowV2{0%,100%{opacity:.72}50%{opacity:1;filter:drop-shadow(0 0 8px rgba(240,193,123,.28))}}@keyframes waterV2{0%{transform:translateY(-14px) scale(.65);opacity:0}18%{opacity:1}75%{opacity:.8}100%{transform:translateY(110px) scale(1);opacity:0}}@keyframes airV2{0%,100%{transform:scale(.8);opacity:.25}50%{transform:scale(1.18);opacity:.7}}@keyframes wormV2{0%,100%{transform:translate(0,0) rotate(-7deg)}50%{transform:translate(26px,-5px) rotate(4deg)}}@keyframes microV2{0%,100%{transform:scale(.65);opacity:.35}50%{transform:scale(1.15);opacity:1}}@keyframes organicV2{0%,100%{transform:translate(0,0) rotate(0);opacity:.72}50%{transform:translate(8px,-8px) rotate(10deg);opacity:1}}@keyframes labelV2{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+table {
+  max-width: 100%;
+}
 
-@media(max-width:1100px){.soil-hero .soil-ecosystem-v2{transform:scale(.9);transform-origin:center right}.soil-hero .soil-block-v2{right:20px}.soil-hero .ecosystem-life-card{left:5px}.soil-hero .ecosystem-legend-v2{right:15px}}
-@media(max-width:850px){.soil-hero-visual-v2{min-height:520px}.soil-hero .soil-ecosystem-v2{transform:scale(.78);transform-origin:center center;margin:-50px 0}.soil-hero .soil-hero-visual{min-height:470px}}
-@media(max-width:650px){.soil-hero .soil-ecosystem-v2{width:520px;height:480px;transform:scale(.64);margin:-80px -55px}.soil-hero .soil-block-v2{right:25px;bottom:60px}.soil-hero .ecosystem-life-card{left:30px;top:55px;width:235px}.soil-hero .ecosystem-label-v2{width:170px;padding:10px 11px}.soil-hero .ecosystem-label-v2 small{font-size:8px}.soil-hero .label-organic-v2{left:24px;top:215px}.soil-hero .label-air-v2{right:0;top:205px}.soil-hero .label-water-v2{left:20px;top:345px}.soil-hero .label-root-v2{right:5px;top:345px}.soil-hero .label-life-v2{left:25px;bottom:74px}.soil-hero .ecosystem-legend-v2{right:30px;bottom:0;gap:5px;flex-wrap:wrap;max-width:430px}.soil-hero .ecosystem-legend-v2 span{padding:6px 8px}}
-@media(max-width:460px){.soil-hero .soil-ecosystem-v2{transform:scale(.53);margin:-105px -120px}.soil-hero .ecosystem-life-card{width:210px}.soil-hero .ecosystem-legend-v2{display:none}}
-@media(prefers-reduced-motion:reduce){.soil-hero .soil-ecosystem-v2 *,.soil-hero .soil-ecosystem-v2::before{animation:none!important;transition:none!important}}
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
+  main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  section {
+    max-width: 100%;
+  }
+
+  /* ---------- GLOBAL NAV ---------- */
+  .navbar {
+    position: relative !important;
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 14px 18px !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+  }
+
+  .navbar .logo,
+  .navbar > .logo {
+    flex: 0 0 auto;
+    font-size: 1rem !important;
+  }
+
+  .navbar nav {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 7px 14px !important;
+    overflow: visible !important;
+  }
+
+  .navbar nav a {
+    min-height: 38px;
+    display: inline-flex !important;
+    align-items: center;
+    font-size: .72rem !important;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  /* ---------- COMMON CONTAINERS ---------- */
+  .container,
+  .section-container,
+  .section-inner,
+  .content-container,
+  .section-heading,
+  .intro-section,
+  .topics-section,
+  .cta-section,
+  .sources-section,
+  .postharvest-sources,
+  .soil-sources {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .section-heading {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* ---------- HEROES ---------- */
+  .soil-hero,
+  .erosion-hero,
+  .postharvest-hero,
+  .survey-hero,
+  .about-hero-clean,
+  .hero,
+  .hero-section,
+  .intro-section {
+    width: 100% !important;
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .soil-hero,
+  .erosion-hero,
+  .postharvest-hero,
+  .survey-hero,
+  .about-hero-clean,
+  .hero,
+  .hero-section,
+  .intro-section {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .soil-hero-content,
+  .erosion-hero-content,
+  .postharvest-hero-content,
+  .survey-hero-content,
+  .about-hero-content,
+  .intro-content {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .soil-hero h1,
+  .erosion-hero h1,
+  .postharvest-hero h1,
+  .survey-hero h1,
+  .about-hero-clean h1,
+  .intro-section h1,
+  .hero h1,
+  .hero-section h1 {
+    font-size: clamp(2rem, 10vw, 3.5rem) !important;
+    line-height: 1.02 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .soil-hero p,
+  .erosion-hero p,
+  .postharvest-hero p,
+  .survey-hero p,
+  .about-hero-clean p,
+  .intro-section p,
+  .hero p,
+  .hero-section p {
+    max-width: 100% !important;
+  }
+
+  /* ---------- GRIDS: ONE COLUMN ON PHONE ---------- */
+  .topic-grid,
+  .survey-stat-grid,
+  .survey-grid,
+  .postharvest-grid,
+  .postharvest-cards,
+  .erosion-grid,
+  .erosion-card-grid,
+  .about-reason,
+  .about-steps,
+  .about-audience,
+  .about-audience-grid,
+  .th-about-reason,
+  .th-about-steps,
+  .th-about-audience,
+  .th-soil-note-grid,
+  .th-soil-facts,
+  .source-list,
+  .soil-facts-grid,
+  .soil-component-visual,
+  .soil-checker-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  .topic-card,
+  .survey-stat-card,
+  .postharvest-card,
+  .erosion-card,
+  .about-audience-card,
+  .th-about-audience-card {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* ---------- SECTION SPACING ---------- */
+  .section,
+  .topics-section,
+  .erosion-section,
+  .postharvest-section,
+  .survey-section,
+  .soil-section,
+  .cta-section,
+  .postharvest-sources,
+  .soil-sources {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  /* ---------- SOIL INTERACTIVE ---------- */
+  .soil-hero-visual,
+  .soil-checker-stage,
+  .th-soil-lab-visual,
+  .th12-visual {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 360px !important;
+  }
+
+  .soil-component-visual {
+    min-height: auto !important;
+  }
+
+  .component-center {
+    grid-column: 1 !important;
+  }
+
+  /* Keep the interactive soil illustration inside the phone width. */
+  .soil-checker-stage,
+  .th-soil-lab-visual,
+  .th12-visual {
+    overflow: hidden !important;
+  }
+
+  /* ---------- ERROSION PHOTOS ---------- */
+  .erosion-photo,
+  .erosion-image,
+  .erosion-card img,
+  .erosion-gallery img,
+  .field-photo img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 360px;
+    object-fit: cover;
+  }
+
+  /* ---------- BUTTONS / CTA ---------- */
+  .button,
+  .btn-primary,
+  .btn-secondary,
+  .button-light,
+  .button-dark {
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 16px !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+
+  .cta-section h2,
+  .soil-final-cta h2,
+  .erosion-final-cta h2,
+  .postharvest-final-cta h2 {
+    font-size: clamp(1.9rem, 9vw, 3rem) !important;
+    line-height: 1.05 !important;
+  }
+
+  /* ---------- FILTERS / PILLS ---------- */
+  .filter-bar,
+  .filters,
+  .postharvest-filters,
+  .category-filter,
+  .plant-filters {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .filter-bar button,
+  .filters button,
+  .postharvest-filters button,
+  .category-filter button,
+  .plant-filters button {
+    min-height: 42px;
+  }
+
+  /* ---------- TABLES ---------- */
+  .table-wrap,
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    width: 100% !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .footer-content,
+  .soil-page .footer-content {
+    flex-direction: column !important;
+    gap: 22px !important;
+  }
+
+  .footer-links,
+  .soil-page .footer-links {
+    flex-wrap: wrap !important;
+    gap: 10px 18px !important;
+  }
+
+  /* ---------- TEXT SAFETY ---------- */
+  h1, h2, h3, h4, p, a, span, strong, small {
+    overflow-wrap: break-word;
+  }
+
+  .source-list a {
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 12px 15px !important;
+  }
+
+  .navbar nav {
+    gap: 4px 11px !important;
+  }
+
+  .navbar nav a {
+    font-size: .68rem !important;
+  }
+
+  .soil-hero,
+  .erosion-hero,
+  .postharvest-hero,
+  .survey-hero,
+  .about-hero-clean,
+  .hero,
+  .hero-section,
+  .intro-section,
+  .section,
+  .topics-section,
+  .erosion-section,
+  .postharvest-section,
+  .survey-section,
+  .soil-section,
+  .cta-section,
+  .postharvest-sources,
+  .soil-sources {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+
+  .soil-hero-visual,
+  .soil-checker-stage,
+  .th-soil-lab-visual,
+  .th12-visual {
+    min-height: 320px !important;
+  }
+
+  .topic-card,
+  .survey-stat-card,
+  .postharvest-card,
+  .erosion-card {
+    padding: 18px !important;
+  }
+}
