@@ -19586,28 +19586,20 @@ table {
 }
 
 /* =========================================================
-   TANAHITA — MOBILE SAFE FIX V4
-   Restore known-good ecosystem CSS; patch only the two
-   broken mobile areas: exploration cards + final CTA.
+   TANAHITA — MOBILE HOTFIX BEFORE PRESENTATION
+   Fixes the two visible mobile issues:
+   1) Eksplorasi 4-card map was still using 4 columns because
+      the existing JS injected a media rule for the wrong class.
+   2) Garden title/intro gets a safe mobile text scale and width.
+   Existing CSS above is preserved.
    ========================================================= */
 
 @media (max-width: 760px) {
-  /* EKSPLORASI: four cards must become real full-width cards. */
-  .th-explore-wow {
-    width: calc(100% - 24px) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  .th-explore-wow-inner {
-    padding: 26px 18px !important;
-  }
-
+  /* The real container class is .th-explore-wow-map, not
+     .th-explore-wow-cards. Keep the four cards readable. */
   .th-explore-wow-map {
-    display: grid !important;
     grid-template-columns: 1fr !important;
     gap: 12px !important;
-    width: 100% !important;
   }
 
   .th-explore-wow-map::before {
@@ -19615,86 +19607,155 @@ table {
   }
 
   .th-explore-wow-card {
-    width: 100% !important;
     min-width: 0 !important;
-    min-height: 0 !important;
-    padding: 18px !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 17px !important;
   }
 
-  .th-explore-wow-card small,
+  .th-explore-wow-card small {
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+  }
+
   .th-explore-wow-card h3,
   .th-explore-wow-card p {
-    white-space: normal !important;
+    overflow-wrap: normal !important;
     word-break: normal !important;
-    overflow-wrap: break-word !important;
-  }
-
-  .th-explore-wow-card h3 {
-    font-size: 22px !important;
-    line-height: 1.15 !important;
-  }
-
-  .th-explore-wow-card p {
-    font-size: 14px !important;
-    line-height: 1.55 !important;
   }
 
   .th-explore-wow-foot {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 7px !important;
+    gap: 6px !important;
   }
 
-  /* FINAL CTA: prevent the giant negative tracking from crushing letters. */
-  .cta-section h2,
-  .soil-page .cta-section h2 {
-    max-width: 360px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    font-size: clamp(2rem, 9vw, 3.2rem) !important;
-    line-height: 1.02 !important;
+  /* Garden intro/title: readable and never squeezed into the
+     narrow desktop-sized heading treatment. */
+  .th-garden.th-public-zone h2,
+  .th-garden h2 {
+    font-size: clamp(25px, 7.8vw, 34px) !important;
+    line-height: 1.12 !important;
     letter-spacing: -0.035em !important;
-    word-break: normal !important;
+    max-width: 100% !important;
+    width: 100% !important;
     overflow-wrap: normal !important;
+    word-break: normal !important;
     white-space: normal !important;
   }
 
-  .cta-section > p:not(.eyebrow) {
-    max-width: 360px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    line-height: 1.55 !important;
+  .th-garden.th-public-zone > p,
+  .th-garden > p {
+    max-width: 100% !important;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
   }
 
-  .cta-section .button-light,
-  .cta-section .button,
-  .cta-section a {
-    white-space: normal !important;
+  .th-garden-top {
+    gap: 16px !important;
+  }
+
+  .th-garden-stats {
+    width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 
 @media (max-width: 420px) {
   .th-explore-wow-inner {
-    padding: 22px 15px !important;
+    padding: 22px 16px !important;
   }
 
   .th-explore-wow h2 {
-    font-size: clamp(25px, 8vw, 32px) !important;
-    line-height: 1.08 !important;
-    letter-spacing: -0.02em !important;
+    font-size: clamp(25px, 8.2vw, 32px) !important;
+    line-height: 1.1 !important;
   }
 
-  .th-explore-wow-intro {
+  .th-garden.th-public-zone,
+  .th-garden {
+    padding: 22px 16px !important;
+  }
+
+  .th-garden.th-public-zone h2,
+  .th-garden h2 {
+    font-size: 25px !important;
+    line-height: 1.14 !important;
+  }
+
+  .th-garden-stats {
+    gap: 6px !important;
+  }
+
+  .th-garden-stat {
+    padding: 10px 6px !important;
+  }
+
+  .th-garden-stat b {
+    font-size: 16px !important;
+  }
+
+  .th-garden-stat span {
+    font-size: 10px !important;
+  }
+}
+
+/* =========================================================
+   TANAHITA MOBILE HOTFIX — EKSPLORASI CTA
+   Fix: heading "Sudah siap? / Pilih topikmu dan mulai belajar."
+   Jangan override desktop; hanya <=560px.
+   ========================================================= */
+@media (max-width: 560px) {
+  .cta-section {
+    padding: 88px 20px !important;
+    min-height: auto !important;
+    overflow: hidden !important;
+  }
+
+  .cta-section .eyebrow {
+    display: block !important;
+    margin: 0 0 18px !important;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    letter-spacing: .18em !important;
+    text-align: center !important;
+  }
+
+  .cta-section h2 {
+    width: 100% !important;
+    max-width: 340px !important;
+    margin: 0 auto 24px !important;
+    padding: 0 !important;
+    font-size: clamp(2.25rem, 11vw, 3.25rem) !important;
+    line-height: .98 !important;
+    letter-spacing: -.035em !important;
+    word-spacing: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    text-align: center !important;
+  }
+
+  .cta-section > p:not(.eyebrow) {
+    width: 100% !important;
+    max-width: 320px !important;
+    margin: 0 auto 28px !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+    text-align: center !important;
+  }
+
+  .cta-section .button,
+  .cta-section .button-light,
+  .cta-section .button-dark {
+    max-width: 260px !important;
+    width: auto !important;
+    margin: 0 auto !important;
+    padding: 13px 22px !important;
     font-size: 14px !important;
-    line-height: 1.6 !important;
-  }
-
-  .cta-section h2,
-  .soil-page .cta-section h2 {
-    max-width: 330px !important;
-    font-size: clamp(1.9rem, 10vw, 2.8rem) !important;
-    letter-spacing: -0.025em !important;
+    line-height: 1.25 !important;
   }
 }
